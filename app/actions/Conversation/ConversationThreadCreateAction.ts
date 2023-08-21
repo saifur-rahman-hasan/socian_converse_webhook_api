@@ -1,7 +1,8 @@
 import BaseAction from "@/actions/BaseAction";
 import {
 	AssignableTaskDocOutputInterface,
-	ConversationDocOutputInterface, ConversationLastMessageInterface,
+	ConversationDocOutputInterface,
+	ConversationLastMessageInterface,
 	ConversationMessageCreateInputInterface,
 	ConversationMessageDocOutputInterface,
 	ConversationParticipantUserInterface,
@@ -141,14 +142,10 @@ export default class ConversationThreadCreateAction extends BaseAction {
 				conversationClosed: false
 			}
 
-			debugLog(`updatedConversationData: `, updatedConversationData)
-
-			const updatedConversation = await this.conversationQuery.updateAndGetConversationDoc(
+			this.conversation = await this.conversationQuery.updateAndGetConversationDoc(
 				this.conversationId,
 				updatedConversationData
 			)
-
-			this.conversation = updatedConversation
 
 
 			throwIf(

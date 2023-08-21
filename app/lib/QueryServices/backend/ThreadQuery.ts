@@ -1,15 +1,22 @@
 import prisma from "@/lib/prisma";
-import {ConversationThreadOutputInterface, ThreadCreateInputInterface} from "@/actions/interface/ConversationInterface";
+import {
+    ConversationThreadOutputInterface,
+    ThreadCreateInputInterface
+} from "@/actions/interface/ConversationInterface";
 import {throwIf} from "@/lib/ErrorHandler";
 import {debugLog} from "@/utils/helperFunctions";
+import ThreadQueryEs from "@/lib/QueryServices/elasticsearch/ThreadQueryEs";
 
 export default class ThreadQuery {
     private now: Date
     private prismaClient: any
+    private threadQueryEs: ThreadQueryEs;
 
     constructor() {
         this.now = new Date
         this.prismaClient = prisma
+        
+        this.threadQueryEs = new ThreadQueryEs()
     }
 
     async removeThreadsByConversationId(conversationId: string): Promise<boolean> {
@@ -27,31 +34,10 @@ export default class ThreadQuery {
         }
     }
 
-    async createThread(workspaceId, channelId, newConversationDocId, fromConsumer, textMessage) {
-        try {
-            const thread = await prisma.thread.create({
-                data: {
-                    workspaceId: workspaceId,
-                    channelId: channelId,
-                    conversationId: newConversationDocId,
-                    title: textMessage,
-                    content: textMessage,
-                    author: {...fromConsumer}
-                }
-            })
-
-            if (!thread?.id) {
-                throw new Error("Invalid Thread object")
-            }
-            return thread
-        } catch (err) {
-            console.log("Error", err.toString())
-            throw new Error("Invalid Thread object")
-        }
-    }
-
     async createNewThread(data: ThreadCreateInputInterface) {
         try {
+            const threadAuthor = {...data.author}
+
             const thread: any = await prisma.thread.create({
                 data: {
                     workspaceId: data.workspaceId,
@@ -59,8 +45,8 @@ export default class ThreadQuery {
                     conversationId: data.conversationId,
                     messageId: data?.messageId || null,
                     title: data.title,
-                    content: data.title,
-                    author: {...data.author},
+                    content: data.content,
+                    author: threadAuthor,
                     createdAt: this.now,
                     updatedAt: this.now,
                 }
