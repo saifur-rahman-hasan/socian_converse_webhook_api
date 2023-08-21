@@ -1,0 +1,35 @@
+# Logs
+logs
+*.log
+
+# Dependency directories
+node_modules/
+
+# Build artifacts
+dist/
+build/
+.next/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# IDE files
+.idea/
+.vscode
+*.iml
+
+# Temporary files
+*.swp
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Local configuration files
+.babelrc
+.eslintrc
+.prettierrc

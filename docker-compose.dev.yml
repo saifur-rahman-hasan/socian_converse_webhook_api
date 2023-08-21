@@ -1,0 +1,16 @@
+version: "3.6"
+services:
+  dev_socian_converse_frontend_dev_nginx:
+    container_name: dev_socian_converse_frontend_dev_nginx
+    build:
+      context: ./
+      dockerfile: ./docker/nginx/app_dev.docker
+    restart: always
+    ports:
+      - "6001:443"
+    networks:
+      - converse-dev-docker-network
+
+networks:
+  converse-dev-docker-network:
+    driver: bridge

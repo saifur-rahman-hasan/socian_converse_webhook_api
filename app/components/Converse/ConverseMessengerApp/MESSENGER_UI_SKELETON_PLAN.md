@@ -1,0 +1,41 @@
+- Header:
+  - Logo or App name
+  - User profile picture
+  - User name
+  - Menu or settings icon
+
+- Sidebar:
+  - Search input field
+  - List of chat conversations:
+    - Each conversation item:
+      - Profile picture or avatar
+      - User name
+      - Last message preview
+      - Unread message count
+      - Time stamp of last message
+
+- Chat Window:
+  - Header:
+    - Profile picture or avatar
+    - User name
+    - Online status indicator
+  - Message area:
+    - Scrollable message list:
+      - Each message item:
+        - Sender's profile picture or avatar
+        - Sender's name
+        - Message content
+        - Time stamp
+    - Message input field:
+      - Text input field
+      - Send button
+  - Typing indicator:
+    - Display when the other person is typing a message
+
+- Footer:
+  - Additional options or actions:
+    - Attachments
+    - Emojis
+    - GIFs
+    - Voice messages
+

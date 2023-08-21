@@ -1,0 +1,21 @@
+FROM node:16
+WORKDIR /app
+
+RUN echo "Getting package.json and installing..."
+COPY app/package*.json ./
+RUN yarn install
+
+RUN echo "Getting app directory..."
+COPY app/ ./
+
+#COPY app/.next ./
+#COPY app/package*.json ./
+#COPY app/.env ./
+RUN npx prisma generate
+
+RUN echo "Starting project build..."
+RUN yarn build
+
+
+EXPOSE 3000
+CMD [ "yarn", "start"]

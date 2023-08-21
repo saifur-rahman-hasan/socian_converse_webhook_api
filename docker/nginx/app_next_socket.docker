@@ -1,0 +1,9 @@
+FROM node:16
+WORKDIR /app
+
+COPY app/socket/socket-server ./
+
+RUN yarn install
+
+EXPOSE 4000
+CMD [ "yarn", "start"]

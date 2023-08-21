@@ -1,0 +1,106 @@
+version: "3.6"
+services:
+
+  #converse frontend implementation
+  socian_converse_frontend:
+    container_name: socian_converse_frontend
+    build:
+      context: ./
+      dockerfile: docker/nginx/app_next.docker
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      "NEXT_APP_URL": "https://converse.socian.ai/"
+      "NEXTAUTH_JWT_SECRET": "Xpgc/3PwdGd5fyC90reBgqgLfrV1c0sIc0hveIgJnQc="
+    networks:
+      - docker-network
+
+  socian_converse_frontend_nginx:
+    container_name: socian_converse_frontend_nginx
+    build:
+      context: ./
+      dockerfile: ./docker/nginx/app.docker
+    depends_on:
+      - socian_converse_frontend
+    restart: always
+    ports:
+      - "443:443"
+    networks:
+      - docker-network
+
+  socian_converse_frontend_dev_nginx:
+    container_name: socian_converse_frontend_dev_nginx
+    build:
+      context: ./
+      dockerfile: ./docker/nginx/app_dev.docker
+    restart: always
+    ports:
+      - "6001:443"
+    networks:
+      - docker-network
+
+  #web socket implementation
+  socian_converse_frontend_socket:
+    container_name: socian_converse_frontend_socket
+    build:
+      context: ./
+      dockerfile: docker/nginx/app_next_socket.docker
+    restart: always
+    ports:
+      - "3501:4000"
+    networks:
+      - docker-network
+
+  socian_converse_frontend_socket_nginx:
+    container_name: socian_converse_frontend_socket_nginx
+    build:
+      context: ./
+      dockerfile: ./docker/nginx/app_socket.docker
+    depends_on:
+      - socian_converse_frontend_socket
+    restart: always
+    ports:
+      - "3500:3500"
+    networks:
+      - docker-network
+
+  socian_converse_frontend_database_new:
+    container_name: socian_converse_frontend_database_new
+    image: postgres:latest
+    restart: always
+    environment:
+      - "POSTGRES_DB=socian_converse_frontend"
+      - "POSTGRES_USER=socian"
+      - "POSTGRES_PASSWORD=743390V20932a"
+    volumes:
+      - socian_converse_frontend_postgresql_volume_new:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - docker-network
+
+  socian_converse_frontend_database:
+    container_name: socian_converse_frontend_database
+    image: postgres:latest
+    restart: always
+    environment:
+      - "POSTGRES_DB=socian_converse_frontend"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+    volumes:
+      - socian_converse_frontend_postgresql_volume:/var/lib/postgresql/data
+    ports:
+      - 5436:5432
+    networks:
+      - docker-network
+
+
+volumes:
+  socian_converse_frontend_postgresql_volume:
+  socian_converse_frontend_postgresql_volume_new:
+
+
+networks:
+  docker-network:
+    driver: bridge
